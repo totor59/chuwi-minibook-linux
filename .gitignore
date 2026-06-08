@@ -1,0 +1,10 @@
+# Build artifacts and large, distro-specific files — never commit these.
+*.deb
+*.udeb
+*.buildinfo
+*.changes
+*.log
+*.tar.*
+src/
+build/
+linux-source*/
