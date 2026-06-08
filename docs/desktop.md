@@ -1,7 +1,7 @@
 # Desktop (Wayland / sway)
 
 On the Minibook X the desktop is the **easy** rotation layer: once the kernel sets
-`panel_orientation=right_side_up` (see [kernel-rotation.md](kernel-rotation.md)), the
+`panel_orientation=right_side_up` (see [boot.md](boot.md)), the
 DRM connector reports the correct orientation and **Wayland compositors auto-rotate**.
 sway therefore needs **`transform normal`** — the real work is HiDPI scaling on a tiny
 high-resolution screen.
