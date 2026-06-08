@@ -1,0 +1,82 @@
+* {
+    font-family: "FiraCode Nerd Font", "FiraCode Nerd Font Mono", "Fira Code", monospace;
+    font-size: 13px;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+window#waybar {
+    background: #0d0d0d;
+    color: #c0caf5;
+    border-bottom: 1px solid #1a1b26;
+}
+
+#workspaces button {
+    padding: 0 10px;
+    background: transparent;
+    color: #565f89;
+    border-bottom: 2px solid transparent;
+}
+
+#workspaces button:hover {
+    background: #1a1b26;
+    color: #c0caf5;
+}
+
+#workspaces button.focused {
+    color: #7dcfff;
+    border-bottom: 2px solid #7dcfff;
+}
+
+#workspaces button.urgent {
+    color: #f7768e;
+    border-bottom: 2px solid #f7768e;
+}
+
+#mode {
+    color: #e0af68;
+    padding: 0 8px;
+}
+
+#clock {
+    color: #bb9af7;
+    font-weight: bold;
+    padding: 0 12px;
+}
+
+#network,
+#battery,
+#temperature,
+#cpu,
+#pulseaudio,
+#backlight,
+#tray {
+    padding: 0 10px;
+    color: #c0caf5;
+}
+
+#battery.warning {
+    color: #e0af68;
+}
+
+#battery.critical {
+    color: #f7768e;
+    animation: blink 1s steps(1) infinite;
+}
+
+#temperature.critical {
+    color: #f7768e;
+}
+
+#network {
+    color: #9ece6a;
+}
+
+#network.disconnected {
+    color: #565f89;
+}
+
+@keyframes blink {
+    to { color: #0d0d0d; background: #f7768e; }
+}

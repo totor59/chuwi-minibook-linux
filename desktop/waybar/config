@@ -1,0 +1,97 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "spacing": 4,
+
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "network",
+        "battery",
+        "temperature",
+        "cpu",
+        "pulseaudio",
+        "backlight",
+        "tray"
+    ],
+
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}"
+    },
+
+    "sway/mode": {
+        "format": "<span style='italic'>{}</span>"
+    },
+
+    "clock": {
+        "interval": 60,
+        "format": "{:%a %d %b   %H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "network": {
+        "interface": "wlp0s20f3",
+        "interval": 5,
+        "format-wifi": "  {essid} ({signalStrength}%)",
+        "format-ethernet": "  {ipaddr}",
+        "format-disconnected": "󰖪  Disconnected",
+        "tooltip-format": "{ifname}: {ipaddr}\n{gwaddr} — {bandwidthUpBytes}↑ {bandwidthDownBytes}↓"
+    },
+
+    "battery": {
+        "bat": "BAT0",
+        "interval": 30,
+        "states": {
+            "warning": 20,
+            "critical": 10
+        },
+        "format": "{icon}  {capacity}%",
+        "format-charging": "  {capacity}%",
+        "format-plugged": "  {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "tooltip-format": "{timeTo} — {power:.1f}W"
+    },
+
+    "temperature": {
+        "thermal-zone": 2,
+        "interval": 5,
+        "critical-threshold": 80,
+        "format": "  {temperatureC}°C",
+        "format-critical": "  {temperatureC}°C"
+    },
+
+    "cpu": {
+        "interval": 2,
+        "format": "  {usage}%",
+        "tooltip": false
+    },
+
+    "pulseaudio": {
+        "scroll-step": 5,
+        "format": "{icon}  {volume}%",
+        "format-muted": "  muted",
+        "format-icons": {
+            "default": ["", "", ""]
+        },
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    },
+
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "  {percent}%",
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+
+    "tray": {
+        "spacing": 8
+    }
+}
