@@ -88,6 +88,45 @@ entry straight at it.
 
 ---
 
+## ⚠️ Gotcha #2 — broken APT dependencies after rebuilding GRUB
+
+Rebuilding grub2 bumps the version to `…+chuwi1`, but the stock
+`grub-efi-amd64-signed` and `grub-efi-amd64-unsigned` packages carry a strict
+`Depends: grub-common (= 2.12-9+deb13u2)` (exact version). Once the patched
+`grub-common` (`+chuwi1`) is installed those two become unsatisfied, and **APT then
+refuses every install** — including unrelated ones such as `gh`:
+
+```
+grub-efi-amd64-signed   : Depends: grub-common (= 2.12-9+deb13u2) but 2.12-9+deb13u2+chuwi1 is to be installed
+grub-efi-amd64-unsigned : Depends: grub-common (= 2.12-9+deb13u2) but 2.12-9+deb13u2+chuwi1 is to be installed
+```
+
+**Do NOT run `apt --fix-broken install`.** It "resolves" the conflict by downgrading
+`grub-common` (or removing `grub-efi-amd64-bin`) — i.e. it throws away the patched GRUB.
+
+Correct, non-destructive fix:
+
+1. Install the locally built **unsigned** `+chuwi1` package (matches the new version,
+   satisfying `grub-efi-amd64-bin`'s dependency):
+   ```bash
+   sudo dpkg -i ~/grub-build/src/grub-efi-amd64-unsigned_*+chuwi1_amd64.deb
+   ```
+2. Remove `grub-efi-amd64-signed`. It is only a *Recommends* of `grub-efi-amd64-bin`,
+   `Priority: optional`, and unused once Secure Boot is off. APT 3.0 protects bootloader
+   packages, so pass the override:
+   ```bash
+   sudo apt remove --allow-remove-essential grub-efi-amd64-signed
+   ```
+
+Following the [TL;DR](#tldr) avoids this state in the first place:
+`build-patched-grub.sh` installs the unsigned `+chuwi1` package, and
+`disable-secureboot-install.sh` removes `grub-efi-amd64-signed` **after** the patched
+bootloader is written to the ESP (so there is always a working GRUB on disk before the
+signed package goes). The manual steps above are only for recovering a system that is
+already stuck.
+
+---
+
 ## How the three scripts fit together
 
 | Script | Runs as | Does |

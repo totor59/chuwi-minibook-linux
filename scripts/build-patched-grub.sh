@@ -106,16 +106,27 @@ ok "Build finished."
 # ── 6. Install the freshly built packages ─────────────────────────────────────
 # This makes grub-install/grub-mkimage and the runtime modules use the patched
 # code. It does NOT yet write the bootloader (done in disable-secureboot-install.sh).
+#
+# dpkg-buildpackage drops the .deb files in the PARENT of the source tree, i.e. in
+# $SRC_DIR itself. Install the whole consistent set in ONE dpkg call so the strict
+# inter-package "(= +chuwi1)" dependencies are satisfied together, regardless of order.
+# Installing grub-efi-amd64-unsigned_+chuwi1 here avoids Gotcha #2 (broken APT deps):
+# the stock unsigned package pins grub-common (= stock) and would break every apt run.
 info "=== Installing built packages ==="
 cd "$SRC_DIR"
-sudo dpkg -i ../grub-common_${NEW_VER}_amd64.deb  2>/dev/null || \
-sudo dpkg -i ../grub2-common_${NEW_VER}_amd64.deb 2>/dev/null || true
-
 if [[ -d /sys/firmware/efi ]]; then
-    sudo dpkg -i ../grub-efi-amd64_${NEW_VER}_amd64.deb 2>/dev/null || \
-    sudo dpkg -i ../grub-efi_${NEW_VER}_amd64.deb       2>/dev/null || true
+    sudo dpkg -i \
+        grub-common_${NEW_VER}_amd64.deb \
+        grub2-common_${NEW_VER}_amd64.deb \
+        grub-efi-amd64-bin_${NEW_VER}_amd64.deb \
+        grub-efi-amd64-unsigned_${NEW_VER}_amd64.deb \
+        grub-efi-amd64_${NEW_VER}_amd64.deb
 else
-    sudo dpkg -i ../grub-pc_${NEW_VER}_amd64.deb 2>/dev/null || true
+    sudo dpkg -i \
+        grub-common_${NEW_VER}_amd64.deb \
+        grub2-common_${NEW_VER}_amd64.deb \
+        grub-pc-bin_${NEW_VER}_amd64.deb \
+        grub-pc_${NEW_VER}_amd64.deb
 fi
 ok "Patched GRUB packages installed (grub-install --version should show +chuwi)."
 

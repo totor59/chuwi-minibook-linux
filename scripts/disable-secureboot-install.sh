@@ -48,7 +48,18 @@ grub-install --target=x86_64-efi --efi-directory=/boot/efi \
     --bootloader-id=debian --no-uefi-secure-boot --recheck
 ok "Patched grubx64.efi installed."
 
-# ── 4. Apply the reference rotation (reuses set-grub-rotation.sh) ──────────────
+# ── 4. Heal APT: drop the stock grub-efi-amd64-signed (Gotcha #2) ─────────────
+# It pins grub-common (= stock) and breaks every apt operation. It is only a
+# Recommends of grub-efi-amd64-bin and is unused now that Secure Boot is off and the
+# patched grubx64.efi is already on the ESP (written just above), so removing it is
+# safe. APT 3.0 protects bootloader packages, hence --allow-remove-essential.
+if dpkg -l grub-efi-amd64-signed 2>/dev/null | grep -q '^ii'; then
+    info "=== Removing stock grub-efi-amd64-signed (heals APT deps) ==="
+    apt remove --allow-remove-essential -y grub-efi-amd64-signed || \
+        warn "Could not remove grub-efi-amd64-signed automatically — remove it manually if apt complains."
+fi
+
+# ── 5. Apply the reference rotation (reuses set-grub-rotation.sh) ──────────────
 info "=== Applying -270 rotation ==="
 bash "$SCRIPT_DIR/set-grub-rotation.sh" 270
 
