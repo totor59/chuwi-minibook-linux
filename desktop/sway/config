@@ -2,30 +2,32 @@ set $mod Mod4
 set $term kitty
 set $menu wofi --show drun
 set $files thunar
-set $lock swaylock -f -c 0d0d0d
+set $lock swaylock -f
 
-# DSI-1 panel.
-# Rotation is handled by the kernel DRM panel orientation
-# (video=DSI-1:panel_orientation=right_side_up), so the compositor sees an upright
-# 1920x1200 output and needs NO transform here. Only HiDPI scaling matters on this
-# 10.5" screen: scale 1.75 -> ~1097x686 logical. Use 2.0 if you want bigger UI.
+# Laisser Sway gérer le scaling — désactive le scaling interne GTK/Qt
+exec dbus-update-activation-environment --systemd \
+    DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway \
+    GDK_SCALE=1 GDK_DPI_SCALE=1 \
+    QT_SCALE_FACTOR=1 QT_AUTO_SCREEN_SCALE_FACTOR=0
+
+# Écran DSI-1 — scale 1.75 pour lisibilité sur 10.5" HiDPI
+# Si l'espace logique (960x600) est trop étroit, passe à scale 1.75
 output DSI-1 {
-    resolution 1920x1200
     scale 1.75
-    transform normal
 }
 output * bg #0d0d0d solid_color
 
 # ── Applications ───────────────────────────────────────────────────────────────
-bindsym $mod+Return       exec $term
-bindsym $mod+e            exec $files
+bindsym $mod+t            exec $term
+bindsym $mod+f            exec $files
+bindsym $mod+b            exec brave-browser
 bindsym $mod+d            exec $menu
 bindsym $mod+Shift+q      kill
-bindsym $mod+Shift+e      exec swaymsg exit
+bindsym $mod+Shift+e      exec swaynag -t warning -m 'Quitter sway ?' -B 'Oui' 'swaymsg exit'
 bindsym $mod+Shift+r      reload
 bindsym $mod+ctrl+l       exec $lock
 
-# ── Focus / move (hjkl) ────────────────────────────────────────────────────────
+# ── Navigation hjkl ────────────────────────────────────────────────────────────
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
@@ -36,9 +38,9 @@ bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
 # ── Layouts ────────────────────────────────────────────────────────────────────
-bindsym $mod+b splith
-bindsym $mod+v splitv
-bindsym $mod+f fullscreen toggle
+bindsym $mod+ctrl+h       splith
+bindsym $mod+ctrl+v       splitv
+bindsym $mod+Shift+f      fullscreen toggle
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 
@@ -72,22 +74,22 @@ gaps inner 6
 gaps outer 2
 smart_gaps on
 
-# ── Bar ────────────────────────────────────────────────────────────────────────
+# ── Barre ──────────────────────────────────────────────────────────────────────
 bar {
     swaybar_command waybar
 }
 
-# ── Hardware keys ──────────────────────────────────────────────────────────────
+# ── Matériel ───────────────────────────────────────────────────────────────────
 bindsym XF86MonBrightnessUp   exec brightnessctl set +5%
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym XF86AudioRaiseVolume  exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
 bindsym XF86AudioLowerVolume  exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
 bindsym XF86AudioMute         exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 
-# ── Startup ────────────────────────────────────────────────────────────────────
+# ── Démarrage ──────────────────────────────────────────────────────────────────
 exec mako
 exec swayidle -w \
-    timeout 300  'swaylock -f -c 0d0d0d' \
+    timeout 300  'swaylock -f' \
     timeout 600  'swaymsg "output * dpms off"' \
     resume       'swaymsg "output * dpms on"' \
-    before-sleep 'swaylock -f -c 0d0d0d'
+    before-sleep 'swaylock -f'

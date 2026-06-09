@@ -1,25 +1,12 @@
 {
     "layer": "top",
-    "position": "top",
+    "position": "bottom",
     "height": 36,
     "spacing": 4,
 
-    "modules-left": [
-        "sway/workspaces",
-        "sway/mode"
-    ],
-    "modules-center": [
-        "clock"
-    ],
-    "modules-right": [
-        "network",
-        "battery",
-        "temperature",
-        "cpu",
-        "pulseaudio",
-        "backlight",
-        "tray"
-    ],
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["clock"],
+    "modules-right": ["network", "battery", "temperature", "cpu", "pulseaudio", "backlight", "tray"],
 
     "sway/workspaces": {
         "disable-scroll": true,
@@ -40,9 +27,9 @@
     "network": {
         "interface": "wlp0s20f3",
         "interval": 5,
-        "format-wifi": "  {essid} ({signalStrength}%)",
-        "format-ethernet": "  {ipaddr}",
-        "format-disconnected": "󰖪  Disconnected",
+        "format-wifi": "  {essid} ({signalStrength}%)",
+        "format-ethernet": "  {ipaddr}",
+        "format-disconnected": "  Déconnecté",
         "tooltip-format": "{ifname}: {ipaddr}\n{gwaddr} — {bandwidthUpBytes}↑ {bandwidthDownBytes}↓"
     },
 
@@ -54,9 +41,9 @@
             "critical": 10
         },
         "format": "{icon}  {capacity}%",
-        "format-charging": "  {capacity}%",
-        "format-plugged": "  {capacity}%",
-        "format-icons": ["", "", "", "", ""],
+        "format-charging": "  {capacity}%",
+        "format-plugged": "  {capacity}%",
+        "format-icons": ["", "", "", "", ""],
         "tooltip-format": "{timeTo} — {power:.1f}W"
     },
 
@@ -64,29 +51,29 @@
         "thermal-zone": 2,
         "interval": 5,
         "critical-threshold": 80,
-        "format": "  {temperatureC}°C",
-        "format-critical": "  {temperatureC}°C"
+        "format": "  {temperatureC}°C",
+        "format-critical": "  {temperatureC}°C"
     },
 
     "cpu": {
         "interval": 2,
-        "format": "  {usage}%",
+        "format": "  {usage}%",
         "tooltip": false
     },
 
     "pulseaudio": {
         "scroll-step": 5,
         "format": "{icon}  {volume}%",
-        "format-muted": "  muted",
+        "format-muted": "  muet",
         "format-icons": {
-            "default": ["", "", ""]
+            "default": ["", "", ""]
         },
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
     },
 
     "backlight": {
         "device": "intel_backlight",
-        "format": "  {percent}%",
+        "format": "  {percent}%",
         "on-scroll-up": "brightnessctl set +5%",
         "on-scroll-down": "brightnessctl set 5%-"
     },

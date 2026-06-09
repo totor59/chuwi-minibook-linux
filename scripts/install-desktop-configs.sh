@@ -28,5 +28,17 @@ for d in "$SRC"/*/; do
     ok "Installed ~/.config/$name"
 done
 
+# Copy individual dotfiles at desktop/ root (e.g. starship.toml).
+for f in "$SRC"/*.toml "$SRC"/*.conf "$SRC"/*.json; do
+    [[ -f "$f" ]] || continue
+    name="$(basename "$f")"
+    if [[ -e "$DEST/$name" ]]; then
+        mv "$DEST/$name" "$DEST/$name.bak.$STAMP"
+        warn "Backed up existing ~/.config/$name -> $name.bak.$STAMP"
+    fi
+    cp "$f" "$DEST/$name"
+    ok "Installed ~/.config/$name"
+done
+
 echo
 ok "Done. In sway, reload with Super+Shift+r (or log into a fresh sway session)."
