@@ -28,9 +28,12 @@ output DSI-1 {
 | File | Purpose |
 | --- | --- |
 | `sway/config` | window manager: scaling, keybindings (hjkl), workspaces, idle/lock, media keys |
-| `waybar/config`, `waybar/style.css` | status bar (font 13, Tokyo-Night-ish colours) |
-| `kitty/kitty.conf` | terminal (FiraCode Nerd Font 13) |
+| `waybar/config`, `waybar/style.css` | status bar, position bottom, Tokyo Night colours |
+| `kitty/kitty.conf` | terminal (FiraCode Nerd Font, zsh shell, size 9) |
 | `gtk-3.0/settings.ini` | dark GTK theme + font |
+| `swaylock/config` | lock screen colours (Tokyo Night / Catppuccin mix) |
+| `environment.d/wayland-scale.conf` | Wayland/HiDPI env vars (GDK, QT, MOZ, XDG) |
+| `starship.toml` | shell prompt (Catppuccin Mocha) |
 
 ## Install
 
@@ -39,10 +42,10 @@ output DSI-1 {
 sudo apt install -y \
     sway swaybg swayidle swaylock xwayland wl-clipboard \
     waybar wofi mako-notifier kitty thunar gvfs tumbler \
-    brightnessctl pipewire wireplumber \
+    brightnessctl pipewire wireplumber starship \
     fonts-firacode fonts-noto-core
 
-# FiraCode Nerd Font (for the waybar/kitty glyphs)
+# FiraCode Nerd Font (for the waybar/kitty/starship glyphs)
 mkdir -p ~/.local/share/fonts/FiraCodeNerd
 curl -L https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip -o /tmp/FiraCode.zip
 unzip -qo /tmp/FiraCode.zip -d ~/.local/share/fonts/FiraCodeNerd && fc-cache -f
@@ -53,6 +56,17 @@ bash scripts/install-desktop-configs.sh
 
 `waybar/config` pins the Wi-Fi interface to `wlp0s20f3`; adjust `"interface"` if
 `ip link` shows a different name on your machine.
+
+## Claude Code (dev tool)
+
+Claude Code installs as a self-contained binary — no Node.js needed:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+Installs to `~/.local/share/claude/` and symlinks to `~/.local/bin/claude`. Make sure
+`~/.local/bin` is in `$PATH` (it is by default in Debian if the dir exists).
 
 ## Boot splash (Plymouth)
 
